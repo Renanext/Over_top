@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Cadastro de Clientes e Produtos</title>
+    <style>
+        body {
+            background-image: url(https://images.squarespace-cdn.com/content/v1/652fa4693e374b08a06e3965/a95a9c97-4759-400a-8b5f-53b0013842ef/OTTE_logo_2023.jpg);
+            background-repeat: no-repeat;
+            background-size: cover;
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .form-container {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 5px;
+            margin: 0 auto 20px;
+            max-width: 400px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            color: #333;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+        input[type="text"],
+        input[type="number"] {
+            width: calc(100% - 10px);
+            padding: 5px;
+            margin-top: 5px;
+        }
+        input[type="submit"],
+        .reset-button {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover,
+        .reset-button:hover {
+            background-color: #0056b3;
+        }
+        .mensagem {
+            text-align: center;
+            margin: 10px 0;
+        }
+        .resultados {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Cadastro de Clientes e Produtos</h1>
+
+    <div class="form-container">
+        <h2>Adicionar Cliente</h2>
+        <div class="mensagem">
+            <?php if (!empty($mensagem)) echo $mensagem; ?>
+        </div>
+        <form method="post" action="">
+            <label for="nome">Nome:</label>
+            <input type="text" id="nome" name="nome" required>
+            <label for="cpf">CPF:</label>
+            <input type="text" id="cpf" name="cpf" required>
+            <label for="email">Email:</label>
+            <input type="text" id="email" name="email" required>
+            <input type="submit" name="add_cliente" value="Adicionar Cliente">
+        </form>
+    </div>
+
+    <div class="form-container">
+        <h2>Deletar Cliente</h2>
+        <form method="post" action="">
+            <label for="delete_search">ID, Nome, CPF ou Email do Cliente:</label>
+            <input type="text" id="delete_search" name="delete_search" required>
+            <input type="submit" name="delete_cliente" value="Deletar Cliente">
+        </form>
+    </div>
+
+    <div class="form-container">
+        <h2>Consultar Clientes</h2>
+        <form method="post" action="">
+            <label for="search">Buscar Cliente (Nome, CPF ou Email):</label>
+            <input type="text" id="search" name="search">
+            <input type="submit" name="search_cliente" value="Buscar Cliente">
+            <button type="submit" name="reset_cliente" class="reset-button">Resetar Busca</button>
+        </form>
+
+        <div class="resultados">
+            <?php if (!empty($clientes)): ?>
+                <h3>Resultados da Consulta:</h3>
+                <?php foreach ($clientes as $cliente): ?>
+                    <div>
+                        <h4><?php echo htmlspecialchars($cliente['nome']); ?></h4>
+                        <p>CPF: <?php echo htmlspecialchars($cliente['cpf']); ?></p>
+                        <p>Email: <?php echo htmlspecialchars($cliente['email']); ?></p>
+                        <p>ID: <?php echo htmlspecialchars($cliente['cliente_id']); ?></p>
+                    </div>
+                    <hr>
+                <?php endforeach; ?>
+            <?php elseif (isset($_POST['search_cliente'])): ?>
+                <div class="mensagem">Nenhum cliente encontrado.</div>
+            <?php endif; ?>
+        </div>
+    </div>
+
+    <div class="form-container">
+        <h2>Adicionar Produto</h2>
+        <div class="mensagem">
+            <?php if (!empty($mensagem)) echo $mensagem; ?>
+        </div>
+        <form method="post" action="">
+            <label for="descricao">Descrição:</label>
+            <input type="text" id="descricao" name="descricao" required>
+            <label for="valor">Valor:</label>
+            <input type="number" id="valor" name="valor" step="0.01" required>
+            <input type="submit" name="add_product" value="Adicionar Produto">
+        </form>
+    </div>
+
+    <div class="form-container">
+        <h2>Deletar Produto</h2>
+        <form method="post" action="">
+            <label for="id_ou_descricao">ID ou Descrição do Produto:</label>
+            <input type="text" id="id_ou_descricao" name="id_ou_descricao" required>
+            <input type="submit" name="delete_product" value="Deletar Produto">
+        </form>
+    </div>
+
+    <div class="form-container">
+        <h2>Consultar Produtos</h2>
+        <form method="post" action="">
+            <label for="search_descricao">Descrição ou ID do Produto:</label>
+            <input type="text" id="search_descricao" name="search_descricao">
+            <input type="submit" name="search_product" value="Buscar Produto">
+            <button type="submit" name="reset_product" class="reset-button">Resetar Busca</button>
+        </form>
+
+        <div class="resultados">
+            <?php if (!empty($produtos)): ?>
+                <h3>Resultados da Consulta:</h3>
+                <?php foreach ($produtos as $produto): ?>
+                    <div>
+                        <h4><?php echo htmlspecialchars($produto['descricao']); ?></h4>
+                        <p>Valor: R$ <?php echo number_format($produto['valor'], 2, ',', '.'); ?></p>
+                        <p>ID: <?php echo htmlspecialchars($produto['produto_id']); ?></p>
+                    </div>
+                    <hr>
+                <?php endforeach; ?>
+            <?php elseif (isset($_POST['search_product'])): ?>
+                <div class="mensagem">Nenhum produto encontrado.</div>
+            <?php endif; ?>
+        </div>
+    </div>
+
+</body>
+</html>
